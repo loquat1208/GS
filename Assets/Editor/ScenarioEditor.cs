@@ -79,14 +79,14 @@ namespace Gs.Editor
         private void Save()
         {
             string toJson = JsonHelper.ToJson(scenes.ToArray(), prettyPrint: true);
-            File.WriteAllText(Application.dataPath + "/Saves/data.json", toJson);
+            File.WriteAllText(Application.dataPath + ScenarioDataModel.Path, toJson);
 
             message = "저장을 완료하였습니다.";
         }
 
         private void Load()
         {
-            string jsonString = File.ReadAllText(Application.dataPath + "/Saves/data.json");
+            string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
             ScenarioModel[ ] data = JsonHelper.FromJson<ScenarioModel>(jsonString);
 
             charaName = data[num].Name;
