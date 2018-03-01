@@ -2,7 +2,7 @@
 
 namespace GS.Scenario
 {
-    public class ScenarioController : MonoBehaviour
+    public class ScenarioSceneController : MonoBehaviour
     {
         
     }

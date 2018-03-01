@@ -11,7 +11,7 @@ namespace GS.Data
         public void Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            Data = JsonHelper.FromJson<ScenarioModel>(jsonString);
+            Data = JsonHelper.FromJson<ScenarioSceneModel>(jsonString);
         }
     }
 }

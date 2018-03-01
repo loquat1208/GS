@@ -1,6 +1,9 @@
-﻿public interface IDataHelper : IData
+﻿namespace GS.Data
 {
-    IData[ ] Data { get; }
+    public interface IDataHelper : IData
+    {
+        IData[] Data { get; }
 
-    void Load();
+        void Load();
+    }
 }

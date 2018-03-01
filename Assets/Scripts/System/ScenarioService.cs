@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using GS.Scenario;
+﻿using GS.Scenario;
+using GS.Data;
 
 namespace GS.GameSystem
 {
-    public class ScenarioService : MonoBehaviour
+    public class ScenarioService : IService
     {
         private readonly IDataHelper scenarioDataHelper;
 
@@ -15,14 +15,14 @@ namespace GS.GameSystem
             this.scenarioDataHelper = scenarioDataHelper;
         }
 
-        public ScenarioModel[ ] Scenario
+        public ScenarioSceneModel[ ] Scenes
         {
             get
             {
                 if (scenarioDataHelper.Data == null)
                     scenarioDataHelper.Load();
 
-                return (ScenarioModel[ ])scenarioDataHelper.Data;
+                return (ScenarioSceneModel[ ])scenarioDataHelper.Data;
             }
         }
     }

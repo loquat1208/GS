@@ -7,7 +7,7 @@ namespace GS.GameSystem
     {
         private static GameObject container;
         private static Service instance;
-        private ScenarioService scenarioService;
+        private IService scenarioService;
 
         public static Service Instance
         {
@@ -30,7 +30,7 @@ namespace GS.GameSystem
                 if (scenarioService == null)
                     scenarioService = new ScenarioService(new ScenarioDataHelper());
 
-                return scenarioService;
+                return (ScenarioService)scenarioService;
             }
         }
     }

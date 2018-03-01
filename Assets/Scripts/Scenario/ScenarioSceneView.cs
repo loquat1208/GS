@@ -4,15 +4,15 @@ using GS.GameSystem;
 
 namespace GS.Scenario
 {
-    public class ScenarioView : MonoBehaviour
+    public class ScenarioSceneView : MonoBehaviour
     {
         [SerializeField] private Text Name;
 
-        private ScenarioModel[ ] Scenario { get { return Service.Instance.ScenarioService.Scenario; } }
+        private ScenarioSceneModel[ ] Scenes { get { return Service.Instance.ScenarioService.Scenes; } }
 
         private void Start()
         {
-            Name.text = Scenario[0].Name;
+            Name.text = Scenes[0].Name;
         }
     }
 }

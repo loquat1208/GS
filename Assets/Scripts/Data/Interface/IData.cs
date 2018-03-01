@@ -1,4 +1,7 @@
-﻿public interface IData
+﻿namespace GS.Data
 {
+    public interface IData
+    {
 
+    }
 }

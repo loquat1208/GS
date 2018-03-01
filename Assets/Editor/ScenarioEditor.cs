@@ -9,7 +9,7 @@ namespace Gs.Editor
 {
     public class ScenarioEditor : EditorWindow
     {
-        private List<ScenarioModel> scenes = new List<ScenarioModel>();
+        private List<ScenarioSceneModel> scenes = new List<ScenarioSceneModel>();
         private string message;
         private int num;
         private string charaName;
@@ -21,7 +21,6 @@ namespace Gs.Editor
             ScenarioEditor window = (ScenarioEditor)GetWindow(typeof(ScenarioEditor));
             window.Show();
         }
-
 
         private void OnGUI()
         {
@@ -62,7 +61,7 @@ namespace Gs.Editor
 
         private void Add()
         {
-            ScenarioModel scene = new ScenarioModel();
+            ScenarioSceneModel scene = new ScenarioSceneModel();
             scene.Name = charaName;
             scenes.Add(scene);
 
@@ -87,7 +86,7 @@ namespace Gs.Editor
         private void Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            ScenarioModel[ ] data = JsonHelper.FromJson<ScenarioModel>(jsonString);
+            ScenarioSceneModel[ ] data = JsonHelper.FromJson<ScenarioSceneModel>(jsonString);
 
             charaName = data[num].Name;
 
