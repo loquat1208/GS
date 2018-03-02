@@ -13,6 +13,9 @@ namespace Gs.Editor
         private string message;
         private int num;
         private string charaName;
+        private string line;
+
+        private bool isAutoSave = false;
         private Vector2 editorScrollPos;
 
         [MenuItem("Scenario/Scenario Editor")]
@@ -22,6 +25,7 @@ namespace Gs.Editor
             window.Show();
         }
 
+        // TODO: 코드 리펙토링
         private void OnGUI()
         {
             editorScrollPos = EditorGUILayout.BeginScrollView(editorScrollPos);
@@ -35,8 +39,10 @@ namespace Gs.Editor
 
             GUILayout.Label("Scene Setting", EditorStyles.boldLabel);
             charaName = EditorGUILayout.TextField("Name", charaName);
+            line = EditorGUILayout.TextField("Line", line);
 
             GUILayout.Label("Scene Control", EditorStyles.boldLabel);
+            isAutoSave = EditorGUILayout.Toggle("Auto Save", isAutoSave);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Scene Edit")) Edit();
             if (GUILayout.Button("Scene Add")) Add();
@@ -52,9 +58,24 @@ namespace Gs.Editor
             GUILayout.EndScrollView();
         }
 
+        private void WriteScene(ScenarioSceneModel scene)
+        {
+            scene.Name = charaName;
+            scene.Line = line;
+        }
+
+        private void ReadScene(ScenarioSceneModel scene)
+        {
+            charaName = scene.Name;
+            line = scene.Line;
+        }
+
         private void Edit()
         {
-            scenes[num].Name = charaName;
+            WriteScene(scenes[num]);
+
+            if (isAutoSave)
+                Save();
 
             message = "장면을 수정하였습니다.";
         }
@@ -62,7 +83,8 @@ namespace Gs.Editor
         private void Add()
         {
             ScenarioSceneModel scene = new ScenarioSceneModel();
-            scene.Name = charaName;
+            WriteScene(scene);
+
             scenes.Add(scene);
 
             message = "장면을 추가했습니다.";
@@ -90,7 +112,7 @@ namespace Gs.Editor
             data.AddRange(JsonHelper.FromJson<ScenarioSceneModel>(jsonString));
 
             scenes = data;
-            charaName = scenes[num].Name;
+            ReadScene(scenes[num]);
 
             message = "장면 불러오기를 완료하였습니다.";
         }
