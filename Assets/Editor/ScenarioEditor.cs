@@ -86,9 +86,11 @@ namespace Gs.Editor
         private void Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            ScenarioSceneModel[ ] data = JsonHelper.FromJson<ScenarioSceneModel>(jsonString);
+            List<ScenarioSceneModel> data = new List<ScenarioSceneModel>();
+            data.AddRange(JsonHelper.FromJson<ScenarioSceneModel>(jsonString));
 
-            charaName = data[num].Name;
+            scenes = data;
+            charaName = scenes[num].Name;
 
             message = "장면 불러오기를 완료하였습니다.";
         }
