@@ -6,5 +6,6 @@ namespace GS.Scenario
     public class ScenarioSceneModel : Data.IData
     {
         public string Name;
+        public string Line;
     }
 }
