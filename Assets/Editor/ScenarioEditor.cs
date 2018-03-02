@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using GS.Data;
-using GS.Scenario;
 
 namespace Gs.Editor
 {
     public class ScenarioEditor : EditorWindow
     {
-        private List<ScenarioSceneModel> scenes = new List<ScenarioSceneModel>();
+        private List<ScenarioSceneDataModel> scenes = new List<ScenarioSceneDataModel>();
         private string message;
         private int num;
         private string charaName;
@@ -58,13 +57,13 @@ namespace Gs.Editor
             GUILayout.EndScrollView();
         }
 
-        private void WriteScene(ScenarioSceneModel scene)
+        private void WriteScene(ScenarioSceneDataModel scene)
         {
             scene.Name = charaName;
             scene.Line = line;
         }
 
-        private void ReadScene(ScenarioSceneModel scene)
+        private void ReadScene(ScenarioSceneDataModel scene)
         {
             charaName = scene.Name;
             line = scene.Line;
@@ -82,7 +81,7 @@ namespace Gs.Editor
 
         private void Add()
         {
-            ScenarioSceneModel scene = new ScenarioSceneModel();
+            ScenarioSceneDataModel scene = new ScenarioSceneDataModel();
             WriteScene(scene);
 
             scenes.Add(scene);
@@ -108,8 +107,8 @@ namespace Gs.Editor
         private void Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            List<ScenarioSceneModel> data = new List<ScenarioSceneModel>();
-            data.AddRange(JsonHelper.FromJson<ScenarioSceneModel>(jsonString));
+            List<ScenarioSceneDataModel> data = new List<ScenarioSceneDataModel>();
+            data.AddRange(JsonHelper.FromJson<ScenarioSceneDataModel>(jsonString));
 
             scenes = data;
             ReadScene(scenes[num]);

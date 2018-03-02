@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using GS.GameSystem;
 
 namespace GS.Scenario
 {
@@ -9,12 +8,12 @@ namespace GS.Scenario
         [SerializeField] private Text Name;
         [SerializeField] private Text Line;
 
-        private ScenarioSceneModel[ ] Scenes { get { return Service.Instance.ScenarioService.Scenes; } }
+        public bool IsTouch { get { return Input.GetMouseButtonDown(0); } }
 
-        private void Start()
+        public void Draw(int num)
         {
-            Name.text = Scenes[0].Name;
-            Line.text = Scenes[0].Line;
+            Name.text = ScenarioSceneHelper.Scenes[num].Name;
+            Line.text = ScenarioSceneHelper.Scenes[num].Line;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using UnityEngine;
-using GS.Scenario;
 
 namespace GS.Data
 {
@@ -11,7 +10,7 @@ namespace GS.Data
         public void Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            Data = JsonHelper.FromJson<ScenarioSceneModel>(jsonString);
+            Data = JsonHelper.FromJson<ScenarioSceneDataModel>(jsonString);
         }
     }
 }

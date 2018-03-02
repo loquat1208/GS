@@ -1,5 +1,4 @@
-﻿using GS.Scenario;
-using GS.Data;
+﻿using GS.Data;
 
 namespace GS.GameSystem
 {
@@ -15,14 +14,14 @@ namespace GS.GameSystem
             this.scenarioDataHelper = scenarioDataHelper;
         }
 
-        public ScenarioSceneModel[ ] Scenes
+        public ScenarioSceneDataModel[ ] Scenes
         {
             get
             {
                 if (scenarioDataHelper.Data == null)
                     scenarioDataHelper.Load();
 
-                return (ScenarioSceneModel[ ])scenarioDataHelper.Data;
+                return (ScenarioSceneDataModel[ ])scenarioDataHelper.Data;
             }
         }
     }

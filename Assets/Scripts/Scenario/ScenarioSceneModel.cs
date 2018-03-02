@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace GS.Scenario
+﻿namespace GS.Scenario
 {
-    [Serializable]
-    public class ScenarioSceneModel : Data.IData
+    public class ScenarioSceneModel
     {
-        public string Name;
-        public string Line;
+        public int CurrentNum;
     }
 }
