@@ -30,7 +30,7 @@ namespace Gs.Editor
             editorScrollPos = EditorGUILayout.BeginScrollView(editorScrollPos);
 
             GUILayout.Label("Debug", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField(message);
+            EditorGUILayout.HelpBox(message, MessageType.Info);
 
             GUILayout.Label("Scene Number", EditorStyles.boldLabel);
             int maxScene = scenes.Count > 0 ? scenes.Count - 1 : 0;
@@ -85,6 +85,9 @@ namespace Gs.Editor
             WriteScene(scene);
 
             scenes.Add(scene);
+
+            if (isAutoSave)
+                Save();
 
             message = "장면을 추가했습니다.";
         }
