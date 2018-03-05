@@ -8,11 +8,15 @@ namespace Gs.Editor
 {
     public class ScenarioEditor : EditorWindow
     {
+        private const string ResourcesPath = "Assets/Resources/";
+
         private List<ScenarioSceneDataModel> scenes = new List<ScenarioSceneDataModel>();
         private string message;
         private int num;
         private string charaName;
         private string line;
+        private Object bg;
+        private string bgPath;
 
         private bool isAutoSave = false;
         private Vector2 editorScrollPos;
@@ -38,7 +42,9 @@ namespace Gs.Editor
 
             GUILayout.Label("Scene Setting", EditorStyles.boldLabel);
             charaName = EditorGUILayout.TextField("Name", charaName);
-            line = EditorGUILayout.TextField("Line", line);
+            EditorGUILayout.PrefixLabel("Line");
+            line = EditorGUILayout.TextArea(line, GUILayout.MinHeight(50));
+            bg = EditorGUILayout.ObjectField("Background", bg, typeof(Sprite), true);
 
             GUILayout.Label("Scene Control", EditorStyles.boldLabel);
             isAutoSave = EditorGUILayout.Toggle("Auto Save", isAutoSave);
@@ -57,16 +63,30 @@ namespace Gs.Editor
             GUILayout.EndScrollView();
         }
 
+        // TODO: Helper를 만들자!
+        private string GetObjectResourcesPath(Object ob)
+        {
+            string basePath = AssetDatabase.GetAssetPath(ob);
+            string folderPath = string.Format("{0}/", Path.GetDirectoryName(basePath).Replace(ResourcesPath, string.Empty));
+            string fileTitle = Path.GetFileNameWithoutExtension(basePath);
+
+            return folderPath + fileTitle;
+        }
+
         private void WriteScene(ScenarioSceneDataModel scene)
         {
             scene.Name = charaName;
             scene.Line = line;
+            bgPath = GetObjectResourcesPath(bg);
+            scene.BgPath = bgPath;
         }
 
         private void ReadScene(ScenarioSceneDataModel scene)
         {
             charaName = scene.Name;
             line = scene.Line;
+            bgPath = scene.BgPath;
+            bg = Resources.Load<Sprite>(bgPath);
         }
 
         private void Edit()

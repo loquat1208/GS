@@ -7,5 +7,6 @@ namespace GS.Data
     {
         public string Name;
         public string Line;
+        public string BgPath;
     }
 }

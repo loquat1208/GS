@@ -1,10 +1,19 @@
 {
     "items": [
         {
-            "Name": "Scene 0"
+            "Name": "Scene 1",
+            "Line": "line 1",
+            "BgPath": "Scenario/Sprites/background"
         },
         {
-            "Name": "Scene 1"
+            "Name": "Scene 1",
+            "Line": "line 1",
+            "BgPath": "Resources/unity_builtin_extra"
+        },
+        {
+            "Name": "Scene 3",
+            "Line": "line 3",
+            "BgPath": "unity_builtin_extra"
         }
     ]
 }

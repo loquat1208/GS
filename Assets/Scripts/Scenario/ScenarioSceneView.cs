@@ -7,6 +7,7 @@ namespace GS.Scenario
     {
         [SerializeField] private Text Name;
         [SerializeField] private Text Line;
+        [SerializeField] private Image Bg;
 
         public bool IsTouch { get { return Input.GetMouseButtonDown(0); } }
 
@@ -14,6 +15,8 @@ namespace GS.Scenario
         {
             Name.text = ScenarioSceneHelper.Scenes[num].Name;
             Line.text = ScenarioSceneHelper.Scenes[num].Line;
+            string path = ScenarioSceneHelper.Scenes[num].BgPath;
+            Bg.sprite = Resources.Load<Sprite>(path);
         }
     }
 }
