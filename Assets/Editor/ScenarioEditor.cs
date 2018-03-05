@@ -12,13 +12,12 @@ namespace Gs.Editor
 
         private List<ScenarioSceneDataModel> scenes = new List<ScenarioSceneDataModel>();
         private string message;
-        private int num;
+        private int currentSceneNum;
         private string charaName;
         private string line;
         private Object bg;
         private string bgPath;
 
-        private bool isAutoSave = false;
         private Vector2 editorScrollPos;
 
         [MenuItem("Scenario/Scenario Editor")]
@@ -38,7 +37,15 @@ namespace Gs.Editor
 
             GUILayout.Label("Scene Number", EditorStyles.boldLabel);
             int maxScene = scenes.Count > 0 ? scenes.Count - 1 : 0;
-            num = EditorGUILayout.IntSlider(num, 0, maxScene);
+            currentSceneNum = EditorGUILayout.IntSlider(currentSceneNum, 0, maxScene);
+            if (GUILayout.Button("Load")) DataLoad().ReadScene(scenes[currentSceneNum]);
+
+            GUILayout.Label("Scene Control", EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Scene Edit")) Edit();
+            if (GUILayout.Button("Scene Add")) Add();
+            if (GUILayout.Button("Scene Delete")) Delete();
+            GUILayout.EndHorizontal();
 
             GUILayout.Label("Scene Setting", EditorStyles.boldLabel);
             charaName = EditorGUILayout.TextField("Name", charaName);
@@ -46,24 +53,10 @@ namespace Gs.Editor
             line = EditorGUILayout.TextArea(line, GUILayout.MinHeight(50));
             bg = EditorGUILayout.ObjectField("Background", bg, typeof(Sprite), true);
 
-            GUILayout.Label("Scene Control", EditorStyles.boldLabel);
-            isAutoSave = EditorGUILayout.Toggle("Auto Save", isAutoSave);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Scene Edit")) Edit();
-            if (GUILayout.Button("Scene Add")) Add();
-            if (GUILayout.Button("Scene Delete")) Delete();
-            GUILayout.EndHorizontal();
-
-            GUILayout.Label("Data Control", EditorStyles.boldLabel);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Save")) Save();
-            if (GUILayout.Button("Load")) Load();
-            GUILayout.EndHorizontal();
-
             GUILayout.EndScrollView();
         }
 
-        // TODO: Helper를 만들자!
+        // TODO: Helper랑 interface를 만들자!
         private string GetObjectResourcesPath(Object ob)
         {
             string basePath = AssetDatabase.GetAssetPath(ob);
@@ -73,12 +66,14 @@ namespace Gs.Editor
             return folderPath + fileTitle;
         }
 
-        private void WriteScene(ScenarioSceneDataModel scene)
+        private ScenarioEditor WriteScene(ScenarioSceneDataModel scene)
         {
             scene.Name = charaName;
             scene.Line = line;
             bgPath = GetObjectResourcesPath(bg);
             scene.BgPath = bgPath;
+
+            return this;
         }
 
         private void ReadScene(ScenarioSceneDataModel scene)
@@ -89,12 +84,24 @@ namespace Gs.Editor
             bg = Resources.Load<Sprite>(bgPath);
         }
 
+        private ScenarioEditor AddScene(ScenarioSceneDataModel scene)
+        {
+            scenes.Add(scene);
+
+            return this;
+        }
+
+        private ScenarioEditor DeleteScene(int sceneNum)
+        {
+            scenes.RemoveAt(sceneNum);
+
+            return this;
+        }
+
         private void Edit()
         {
-            WriteScene(scenes[num]);
-
-            if (isAutoSave)
-                Save();
+            WriteScene(scenes[currentSceneNum])
+                .DataSave();
 
             message = "장면을 수정하였습니다.";
         }
@@ -102,24 +109,23 @@ namespace Gs.Editor
         private void Add()
         {
             ScenarioSceneDataModel scene = new ScenarioSceneDataModel();
-            WriteScene(scene);
 
-            scenes.Add(scene);
-
-            if (isAutoSave)
-                Save();
+            WriteScene(scene)
+                .AddScene(scene)
+                .DataSave();
 
             message = "장면을 추가했습니다.";
         }
 
         private void Delete()
         {
-            scenes.RemoveAt(num);
+            DeleteScene(currentSceneNum)
+                .DataSave();
 
             message = "장면을 삭제했습니다.";
         }
 
-        private void Save()
+        private void DataSave()
         {
             string toJson = JsonHelper.ToJson(scenes.ToArray(), prettyPrint: true);
             File.WriteAllText(Application.dataPath + ScenarioDataModel.Path, toJson);
@@ -127,16 +133,16 @@ namespace Gs.Editor
             message = "저장을 완료하였습니다.";
         }
 
-        private void Load()
+        private ScenarioEditor DataLoad()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
             List<ScenarioSceneDataModel> data = new List<ScenarioSceneDataModel>();
             data.AddRange(JsonHelper.FromJson<ScenarioSceneDataModel>(jsonString));
-
             scenes = data;
-            ReadScene(scenes[num]);
 
             message = "장면 불러오기를 완료하였습니다.";
+
+            return this;
         }
     }
 }
