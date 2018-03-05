@@ -4,19 +4,16 @@ using UnityEngine;
 using UnityEditor;
 using GS.Data;
 
-namespace Gs.Editor
+namespace GS.Editor
 {
     public class ScenarioEditor : EditorWindow
     {
-        private const string ResourcesPath = "Assets/Resources/";
-
-        private List<ScenarioSceneDataModel> scenes = new List<ScenarioSceneDataModel>();
-        private string message;
+        private ScenarioEditorHelper helper = new ScenarioEditorHelper();
+        private List<ScenarioSceneDataModel> editScenes = new List<ScenarioSceneDataModel>();
+        private ScenarioSceneDataModel editScene = new ScenarioSceneDataModel();
+        private string message = string.Empty;
         private int currentSceneNum;
-        private string charaName;
-        private string line;
         private Object bg;
-        private string bgPath;
 
         private Vector2 editorScrollPos;
 
@@ -36,9 +33,9 @@ namespace Gs.Editor
             EditorGUILayout.HelpBox(message, MessageType.Info);
 
             GUILayout.Label("Scene Number", EditorStyles.boldLabel);
-            int maxScene = scenes.Count > 0 ? scenes.Count - 1 : 0;
+            int maxScene = editScenes.Count > 0 ? editScenes.Count - 1 : 0;
             currentSceneNum = EditorGUILayout.IntSlider(currentSceneNum, 0, maxScene);
-            if (GUILayout.Button("Load")) DataLoad().ReadScene(scenes[currentSceneNum]);
+            if (GUILayout.Button("Load")) Load();
 
             GUILayout.Label("Scene Control", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
@@ -48,101 +45,42 @@ namespace Gs.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.Label("Scene Setting", EditorStyles.boldLabel);
-            charaName = EditorGUILayout.TextField("Name", charaName);
+            editScene.Name = EditorGUILayout.TextField("Name", editScene.Name);
             EditorGUILayout.PrefixLabel("Line");
-            line = EditorGUILayout.TextArea(line, GUILayout.MinHeight(50));
+            editScene.Line = EditorGUILayout.TextArea(editScene.Line, GUILayout.MinHeight(50));
             bg = EditorGUILayout.ObjectField("Background", bg, typeof(Sprite), true);
+            editScene.BgPath = (bg != null) ? helper.GetObjectResourcesPath(bg) : string.Empty;
 
             GUILayout.EndScrollView();
         }
 
-        // TODO: Helper랑 interface를 만들자!
-        private string GetObjectResourcesPath(Object ob)
+        private void Load()
         {
-            string basePath = AssetDatabase.GetAssetPath(ob);
-            string folderPath = string.Format("{0}/", Path.GetDirectoryName(basePath).Replace(ResourcesPath, string.Empty));
-            string fileTitle = Path.GetFileNameWithoutExtension(basePath);
-
-            return folderPath + fileTitle;
-        }
-
-        private ScenarioEditor WriteScene(ScenarioSceneDataModel scene)
-        {
-            scene.Name = charaName;
-            scene.Line = line;
-            bgPath = GetObjectResourcesPath(bg);
-            scene.BgPath = bgPath;
-
-            return this;
-        }
-
-        private void ReadScene(ScenarioSceneDataModel scene)
-        {
-            charaName = scene.Name;
-            line = scene.Line;
-            bgPath = scene.BgPath;
-            bg = Resources.Load<Sprite>(bgPath);
-        }
-
-        private ScenarioEditor AddScene(ScenarioSceneDataModel scene)
-        {
-            scenes.Add(scene);
-
-            return this;
-        }
-
-        private ScenarioEditor DeleteScene(int sceneNum)
-        {
-            scenes.RemoveAt(sceneNum);
-
-            return this;
+            editScenes = helper.LoadScenes();
+            editScene = editScenes[currentSceneNum];
+            bg = Resources.Load<Sprite>(editScene.BgPath);
+            message = "장면 불러오기를 완료했습니다.";
         }
 
         private void Edit()
         {
-            WriteScene(scenes[currentSceneNum])
-                .DataSave();
-
-            message = "장면을 수정하였습니다.";
+            editScenes[currentSceneNum] = editScene;
+            helper.SaveScenes(editScenes);
+            message = "장면을 수정했습니다.";
         }
 
         private void Add()
         {
             ScenarioSceneDataModel scene = new ScenarioSceneDataModel();
-
-            WriteScene(scene)
-                .AddScene(scene)
-                .DataSave();
-
+            scene = editScene;
+            helper.AddScene(editScenes, scene).SaveScenes(editScenes);
             message = "장면을 추가했습니다.";
         }
 
         private void Delete()
         {
-            DeleteScene(currentSceneNum)
-                .DataSave();
-
+            helper.DeleteScene(editScenes, currentSceneNum).SaveScenes(editScenes);
             message = "장면을 삭제했습니다.";
-        }
-
-        private void DataSave()
-        {
-            string toJson = JsonHelper.ToJson(scenes.ToArray(), prettyPrint: true);
-            File.WriteAllText(Application.dataPath + ScenarioDataModel.Path, toJson);
-
-            message = "저장을 완료하였습니다.";
-        }
-
-        private ScenarioEditor DataLoad()
-        {
-            string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
-            List<ScenarioSceneDataModel> data = new List<ScenarioSceneDataModel>();
-            data.AddRange(JsonHelper.FromJson<ScenarioSceneDataModel>(jsonString));
-            scenes = data;
-
-            message = "장면 불러오기를 완료하였습니다.";
-
-            return this;
         }
     }
 }
