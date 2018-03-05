@@ -7,10 +7,11 @@ namespace GS.Data
     {
         public IData[ ] Data { get; private set; }
 
-        public void Load()
+        public IDataHelper Load()
         {
             string jsonString = File.ReadAllText(Application.dataPath + ScenarioDataModel.Path);
             Data = JsonHelper.FromJson<ScenarioSceneDataModel>(jsonString);
+            return this;
         }
     }
 }
