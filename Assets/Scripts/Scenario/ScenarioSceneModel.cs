@@ -1,7 +1,11 @@
-﻿namespace GS.Scenario
+﻿using UnityEngine;
+
+namespace GS.Scenario
 {
     public class ScenarioSceneModel
     {
-        public int CurrentNum;
+        public string Name;
+        public string Line;
+        public Sprite Bg;
     }
 }

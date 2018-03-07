@@ -8,15 +8,14 @@ namespace GS.Scenario
         [SerializeField] private Text Name;
         [SerializeField] private Text Line;
         [SerializeField] private Image Bg;
-
+        
         public bool IsTouch { get { return Input.GetMouseButtonDown(0); } }
 
-        public void Draw(int num)
+        public void Draw(ScenarioSceneModel[ ] scenes, int num)
         {
-            Name.text = ScenarioSceneHelper.Scenes[num].Name;
-            Line.text = ScenarioSceneHelper.Scenes[num].Line;
-            string path = ScenarioSceneHelper.Scenes[num].BgPath;
-            Bg.sprite = Resources.Load<Sprite>(path);
+            Name.text = scenes[num].Name;
+            Line.text = scenes[num].Line;
+            Bg.sprite = scenes[num].Bg;
         }
     }
 }

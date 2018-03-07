@@ -1,13 +1,20 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using GS.Data;
 
 namespace GS.GameSystem
 {
     public class Service : MonoBehaviour
     {
+        public enum Type
+        {
+            Scenario,
+        }
+
         private static GameObject container;
         private static Service instance;
-        private IService scenarioService;
+
+        public IDictionary<Type, IService> Services { get; private set; }
 
         public static Service Instance
         {
@@ -23,15 +30,10 @@ namespace GS.GameSystem
             }
         }
 
-        public ScenarioService ScenarioService
+        private Service()
         {
-            get
-            {
-                if (scenarioService == null)
-                    scenarioService = new ScenarioService(new ScenarioDataHelper());
-
-                return (ScenarioService)scenarioService;
-            }
+            Services = new Dictionary<Type, IService>();
+            Services.Add(Type.Scenario, new ScenarioService(new ScenarioDataHelper()));
         }
     }
 }

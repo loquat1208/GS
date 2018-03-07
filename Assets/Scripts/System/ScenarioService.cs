@@ -14,15 +14,12 @@ namespace GS.GameSystem
             this.scenarioDataHelper = scenarioDataHelper;
         }
 
-        public ScenarioSceneDataModel[ ] Scenes
+        public ScenarioSceneDataModel[ ] LoadScenesData()
         {
-            get
-            {
-                if (scenarioDataHelper.Data == null)
-                    scenarioDataHelper.Load();
+            if (scenarioDataHelper.Data == null)
+                scenarioDataHelper.Load();
 
-                return (ScenarioSceneDataModel[ ])scenarioDataHelper.Data;
-            }
+            return scenarioDataHelper.Data as ScenarioSceneDataModel[ ];
         }
     }
 }
